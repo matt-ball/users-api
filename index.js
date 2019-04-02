@@ -16,7 +16,7 @@ app.post('/create', (req, res) => {
 
   if (validUser(user)) {
     Object.assign(user, { id: uuidv4() })
-    // users.push(user)
+    users.push(user)
     res.json(strip(user))
   } else {
     res.json(badRequest)
