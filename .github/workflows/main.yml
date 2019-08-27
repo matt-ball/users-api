@@ -8,8 +8,7 @@ on:
 jobs:
   newman:
     steps:
-      - name: Newman Action
-        uses: matt-ball/newman-action@0.0.1
-          with:
-            collection: "https://www.getpostman.com/collections/89ba0c919d73304be70d"
-            environment: "postman_environment.json"
+      - uses: matt-ball/newman-action@0.0.1
+        with:
+          collection: "https://www.getpostman.com/collections/89ba0c919d73304be70d"
+          environment: "postman_environment.json"
