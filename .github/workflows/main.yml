@@ -11,5 +11,6 @@ jobs:
     steps:
       - uses: matt-ball/newman-action@0.0.8
         with:
-          collection: https://www.getpostman.com/collections/89ba0c919d73304be70d
-          environment: postman_environment.json
+          postmanApiKey: ${{ secrets.postmanApiKey }}
+          collection: 5922408-c22ef764-b464-424c-8702-750343478723
+          environment: 5922408-228c7edd-fc15-4f68-9665-a35d7df6945b
