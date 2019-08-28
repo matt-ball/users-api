@@ -9,7 +9,7 @@ jobs:
   newman:
     runs-on: ubuntu-latest
     steps:
-      - uses: matt-ball/newman-action@0.0.20
+      - uses: matt-ball/newman-action@0.0.21
         with:
           postmanApiKey: ${{ secrets.postmanApiKey }}
           collection: 5922408-c22ef764-b464-424c-8702-750343478723
