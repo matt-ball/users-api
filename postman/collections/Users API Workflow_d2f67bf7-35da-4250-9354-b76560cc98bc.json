@@ -1,0 +1,616 @@
+{
+    "info": {
+        "_postman_id": "e7165177-2023-4675-b9db-1e013108caed",
+        "name": "Users API Workflow",
+        "description": "Please refer to the main Users API collection for documentation, examples and a mock server.\n\nThis collection is intended to test and end-to-end workflow with the Users API.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "New user",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "719a074a-27d3-4d4b-b69f-24f86ad31b53",
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "",
+                            "pm.collectionVariables.set('cachedUserId', res.id);",
+                            "postman.setNextRequest('Get user by ID');",
+                            "",
+                            "pm.test('Status code is 200', () => {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Request was successful', () => {",
+                            "    pm.expect(res.status).to.eql('success');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    }
+                },
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "eaea2b79-34cd-4176-b76e-b176d67a2b97",
+                        "exec": [
+                            ""
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "id": "f2e2934d-7579-4858-9bd1-293700d9594c",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "auth": {
+                    "type": "noauth"
+                },
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "firstName",
+                            "value": "{{$randomFirstName}}",
+                            "description": "The user's first name (required)",
+                            "type": "text"
+                        },
+                        {
+                            "key": "lastName",
+                            "value": "{{$randomLastName}}",
+                            "description": "The user's last name (required)",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "{{$randomPassword}}",
+                            "description": "The user's password (required)",
+                            "type": "text"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{url}}/create",
+                    "host": [
+                        "{{url}}"
+                    ],
+                    "path": [
+                        "create"
+                    ]
+                },
+                "description": "Creates a new user in the system. The user will be assigned an ID automatically. This can be found in the response."
+            },
+            "response": []
+        },
+        {
+            "name": "Get user by ID",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "ff5568b8-9faf-4d5d-8166-5e3dd8112ff0",
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "",
+                            "postman.setNextRequest('Update user')",
+                            "",
+                            "pm.test('Status code is 200', () => {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('New user was created', () => {",
+                            "    pm.expect(res[0].status).to.eql('success');",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    },
+                    "exec": [
+                        "const res = pm.response.json();",
+                        "const id = pm.globals.get('id');",
+                        "",
+                        "pm.test('Status code is 200', () => {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test('User matches requested user', () => {",
+                        "    const id = pm.request.url.query.get('id');",
+                        "    pm.expect(res[1].id).to.eql(id);",
+                        "});",
+                        "",
+                        "pm.test('User has correct type of user ID', () => {",
+                        "    pm.expect(res[1].id).to.be.a('string');",
+                        "});",
+                        "",
+                        "pm.test('Does not expose user password', () => {",
+                        "    pm.expect(res[1]).to.not.have.property('password');",
+                        "});",
+                        "",
+                        "pm.test('User has all relevant fields', () => {",
+                        "    pm.expect(res[1]).to.have.all.keys('id', 'firstName', 'lastName');",
+                        "});",
+                        "",
+                        "// cleanup",
+                        "pm.globals.unset('id');",
+                        "",
+                        "pm.sendRequest({",
+                        "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                        "    method: 'delete'",
+                        "});"
+                    ]
+                },
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "4825f918-4cb5-4e2d-958d-52bf0bdfc68f",
+                        "exec": [
+                            "const firstName = pm.variables.get('firstName');",
+                            "const lastName = pm.variables.get('lastName');",
+                            "const password = pm.variables.get('password');",
+                            "",
+                            "pm.sendRequest({",
+                            "    url: `${pm.environment.get('url')}/create`,",
+                            "    method: 'POST',",
+                            "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                            "    body: {",
+                            "        mode: 'raw',",
+                            "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                            "    }",
+                            "}, (err, res) => {",
+                            "    res = res.json();",
+                            "    pm.globals.set('id', res.id);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    },
+                    "exec": [
+                        "const firstName = pm.variables.get('firstName');",
+                        "const lastName = pm.variables.get('lastName');",
+                        "const password = pm.variables.get('password');",
+                        "",
+                        "pm.sendRequest({",
+                        "    url: `${pm.environment.get('url')}/create`,",
+                        "    method: 'POST',",
+                        "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                        "    body: {",
+                        "        mode: 'raw',",
+                        "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                        "    }",
+                        "}, (err, res) => {",
+                        "    res = res.json();",
+                        "    pm.globals.set('id', res.id);",
+                        "});"
+                    ]
+                }
+            ],
+            "id": "81f431da-0691-4c1a-ae47-34bb267a88bb",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "x-mock-response-name",
+                        "value": "Get user by ID",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{url}}/get/?id={{cachedUserId}}",
+                    "host": [
+                        "{{url}}"
+                    ],
+                    "path": [
+                        "get",
+                        ""
+                    ],
+                    "query": [
+                        {
+                            "key": "id",
+                            "value": "{{cachedUserId}}",
+                            "description": "The user's ID (required)"
+                        }
+                    ]
+                },
+                "description": "Retrieves a user by `id`."
+            },
+            "response": []
+        },
+        {
+            "name": "Update user",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "91b52fd6-4204-4743-a076-a7d22c7b61b0",
+                        "exec": [
+                            "const res = pm.response.json();",
+                            "const id = pm.request.url.query.get('id');",
+                            "const firstName = pm.request.body.urlencoded.get('firstName');",
+                            "",
+                            "pm.test('Status code is 200', () => {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "if (res.status === 'success') {",
+                            "    pm.test('User matches requested user', () => {",
+                            "        pm.expect(res.id).to.eql(id);",
+                            "    });",
+                            "    ",
+                            "    pm.test('User has correct type of user ID', () => {",
+                            "        pm.expect(res.id).to.be.a('string');",
+                            "    });",
+                            "    ",
+                            "    pm.test('User has all relevant fields', () => {",
+                            "        pm.expect(res).to.have.all.keys('status', 'id', 'firstName', 'lastName');",
+                            "    });",
+                            "    ",
+                            "    pm.test('Does not expose user password', () => {",
+                            "        pm.expect(res).to.not.have.property('password');",
+                            "    });",
+                            "    ",
+                            "    pm.test('First name is updated to: ' + firstName, () => {",
+                            "        pm.expect(res.firstName).to.eql(firstName);",
+                            "    });",
+                            "}",
+                            "",
+                            "else if (res.status === 'no user found') {",
+                            "    pm.test('Lookup was against correct user', () => {",
+                            "        pm.expect(res.id).to.eql(id);",
+                            "    });",
+                            "}",
+                            "",
+                            "else {",
+                            "    pm.test(res.status).to.eql('invalid request');",
+                            "}",
+                            "",
+                            "// cleanup",
+                            "pm.globals.unset('id');",
+                            "",
+                            "pm.sendRequest({",
+                            "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                            "    method: 'delete'",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    },
+                    "exec": [
+                        "const res = pm.response.json();",
+                        "const id = pm.request.url.query.get('id');",
+                        "const firstName = pm.request.body.urlencoded.get('firstName');",
+                        "",
+                        "pm.test('Status code is 200', () => {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "if (res.status === 'success') {",
+                        "    pm.test('User matches requested user', () => {",
+                        "        pm.expect(res.id).to.eql(id);",
+                        "    });",
+                        "    ",
+                        "    pm.test('User has correct type of user ID', () => {",
+                        "        pm.expect(res.id).to.be.a('string');",
+                        "    });",
+                        "    ",
+                        "    pm.test('User has all relevant fields', () => {",
+                        "        pm.expect(res).to.have.all.keys('status', 'id', 'firstName', 'lastName');",
+                        "    });",
+                        "    ",
+                        "    pm.test('Does not expose user password', () => {",
+                        "        pm.expect(res).to.not.have.property('password');",
+                        "    });",
+                        "    ",
+                        "    pm.test('First name is updated to: ' + firstName, () => {",
+                        "        pm.expect(res.firstName).to.eql(firstName);",
+                        "    });",
+                        "}",
+                        "",
+                        "else if (res.status === 'no user found') {",
+                        "    pm.test('Lookup was against correct user', () => {",
+                        "        pm.expect(res.id).to.eql(id);",
+                        "    });",
+                        "}",
+                        "",
+                        "else {",
+                        "    pm.test(res.status).to.eql('invalid request');",
+                        "}",
+                        "",
+                        "// cleanup",
+                        "pm.globals.unset('id');",
+                        "",
+                        "pm.sendRequest({",
+                        "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                        "    method: 'delete'",
+                        "});"
+                    ]
+                },
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "7bfc5d5f-09d0-4ff1-9b62-42d4fe932846",
+                        "exec": [
+                            "const firstName = pm.variables.get('firstName');",
+                            "const lastName = pm.variables.get('lastName');",
+                            "const password = pm.variables.get('password');",
+                            "",
+                            "pm.sendRequest({",
+                            "    url: `${pm.environment.get('url')}/create`,",
+                            "    method: 'POST',",
+                            "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                            "    body: {",
+                            "        mode: 'raw',",
+                            "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                            "    }",
+                            "}, (err, res) => {",
+                            "    res = res.json();",
+                            "    pm.globals.set('id', res.id);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    },
+                    "exec": [
+                        "const firstName = pm.variables.get('firstName');",
+                        "const lastName = pm.variables.get('lastName');",
+                        "const password = pm.variables.get('password');",
+                        "",
+                        "pm.sendRequest({",
+                        "    url: `${pm.environment.get('url')}/create`,",
+                        "    method: 'POST',",
+                        "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                        "    body: {",
+                        "        mode: 'raw',",
+                        "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                        "    }",
+                        "}, (err, res) => {",
+                        "    res = res.json();",
+                        "    pm.globals.set('id', res.id);",
+                        "});"
+                    ]
+                }
+            ],
+            "id": "bb1ef3e7-f196-414f-94b9-52a104229dde",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "application/x-www-form-urlencoded",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "firstName",
+                            "value": "Benjamin",
+                            "description": "The user's new first name",
+                            "type": "text"
+                        },
+                        {
+                            "key": "password",
+                            "value": "foobar",
+                            "description": "The user's new password",
+                            "type": "text",
+                            "disabled": true
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{url}}/update?id={{id}}",
+                    "host": [
+                        "{{url}}"
+                    ],
+                    "path": [
+                        "update"
+                    ],
+                    "query": [
+                        {
+                            "key": "id",
+                            "value": "{{id}}",
+                            "description": "The user's ID (required)"
+                        }
+                    ]
+                },
+                "description": "Send the keys that you'd like to update, this can be one or more of `firstName`, `lastName` and `password`."
+            },
+            "response": []
+        },
+        {
+            "name": "Delete user",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "a560add3-52db-4a1b-8bb3-3ca9f3bff5aa",
+                        "exec": [
+                            "const response = pm.response;",
+                            "const id = pm.globals.get('id');",
+                            "",
+                            "pm.test('Status code is 200', () => {",
+                            "    pm.response.to.have.status(200);",
+                            "});",
+                            "",
+                            "pm.test('Operation is successful', () => {",
+                            "    const res = response.json();",
+                            "    pm.expect(res.status).to.eql('success');",
+                            "});",
+                            "",
+                            "pm.test('User matches requested user', () => {",
+                            "    const res = response.json();",
+                            "    pm.globals.set(\"apiKey\", res.id);",
+                            "    pm.expect(res.id).to.eql(id);",
+                            "});",
+                            "",
+                            "pm.test('User can no longer be found', () => {",
+                            "    pm.sendRequest({",
+                            "        url: `${pm.environment.get('url')}/get?id=${id}`,",
+                            "        header: 'x-mock-response-name:Get user by ID (no user found)',",
+                            "        method: 'get'",
+                            "    }, (err, res) => {",
+                            "        res = res.json();",
+                            "        pm.expect(res.status).to.eql('no user found');",
+                            "    });",
+                            "});",
+                            "",
+                            "// cleanup",
+                            "pm.globals.unset('id');"
+                        ],
+                        "type": "text/javascript"
+                    },
+                    "exec": [
+                        "const response = pm.response;",
+                        "const id = pm.globals.get('id');",
+                        "",
+                        "pm.test('Status code is 200', () => {",
+                        "    pm.response.to.have.status(200);",
+                        "});",
+                        "",
+                        "pm.test('Operation is successful', () => {",
+                        "    const res = response.json();",
+                        "    pm.expect(res.status).to.eql('success');",
+                        "});",
+                        "",
+                        "pm.test('User matches requested user', () => {",
+                        "    const res = response.json();",
+                        "    pm.globals.set(\"apiKey\", res.id);",
+                        "    pm.expect(res.id).to.eql(id);",
+                        "});",
+                        "",
+                        "pm.test('User can no longer be found', () => {",
+                        "    pm.sendRequest({",
+                        "        url: `${pm.environment.get('url')}/get?id=${id}`,",
+                        "        header: 'x-mock-response-name:Get user by ID (no user found)',",
+                        "        method: 'get'",
+                        "    }, (err, res) => {",
+                        "        res = res.json();",
+                        "        pm.expect(res.status).to.eql('no user found');",
+                        "    });",
+                        "});",
+                        "",
+                        "// cleanup",
+                        "pm.globals.unset('id');"
+                    ]
+                },
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "28b2b919-07db-40f2-99a6-83a8ffa090e4",
+                        "exec": [
+                            "const firstName = pm.variables.get('firstName');",
+                            "const lastName = pm.variables.get('lastName');",
+                            "const password = pm.variables.get('password');",
+                            "",
+                            "pm.sendRequest({",
+                            "    url: `${pm.environment.get('url')}/create`,",
+                            "    method: 'POST',",
+                            "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                            "    body: {",
+                            "        mode: 'raw',",
+                            "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                            "    }",
+                            "}, (err, res) => {",
+                            "    res = res.json();",
+                            "    pm.globals.set('id', res.id);",
+                            "});"
+                        ],
+                        "type": "text/javascript"
+                    },
+                    "exec": [
+                        "const firstName = pm.variables.get('firstName');",
+                        "const lastName = pm.variables.get('lastName');",
+                        "const password = pm.variables.get('password');",
+                        "",
+                        "pm.sendRequest({",
+                        "    url: `${pm.environment.get('url')}/create`,",
+                        "    method: 'POST',",
+                        "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                        "    body: {",
+                        "        mode: 'raw',",
+                        "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                        "    }",
+                        "}, (err, res) => {",
+                        "    res = res.json();",
+                        "    pm.globals.set('id', res.id);",
+                        "});"
+                    ]
+                }
+            ],
+            "id": "042fad62-1f22-4d36-9915-2b39fdcfbf89",
+            "protocolProfileBehavior": {
+                "disableBodyPruning": true
+            },
+            "request": {
+                "method": "DELETE",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "name": "Content-Type",
+                        "value": "text/plain",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": ""
+                },
+                "url": {
+                    "raw": "{{url}}/delete?id={{id}}",
+                    "host": [
+                        "{{url}}"
+                    ],
+                    "path": [
+                        "delete"
+                    ],
+                    "query": [
+                        {
+                            "key": "id",
+                            "value": "{{id}}",
+                            "description": "The user's ID"
+                        }
+                    ]
+                },
+                "description": "Deletes a user from the system by `id`."
+            },
+            "response": []
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "id": "15a5efab-9fcc-48b3-8ec2-b10bd5d52abc",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "id": "b1be7e5a-3af4-4c9e-9d4d-2be4b4295184",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ]
+}

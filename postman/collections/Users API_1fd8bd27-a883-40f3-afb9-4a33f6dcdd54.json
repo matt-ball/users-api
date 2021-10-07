@@ -1,0 +1,1716 @@
+{
+    "info": {
+        "_postman_id": "95796187-1155-48d3-8aa8-1c3e61f76fd8",
+        "name": "Users API",
+        "description": "This collection is designed to show how you might mock, test document a new API. In this case, we're assuming that we're going to create a basic user management API.\n\nIt has basic CRUD operations listed below.\n\nHit the \"Run in Postman\" button to see the pre-request and test scripts powering this collection.\n\nTry running the collection through the Collection Runner to see how the mock allows us to scope out all our responses and write our tests in advance.\n\nThe collection also contains some visualizations to make it a bit easier to work with the API. See the `Get all users` request:\n\n![Visualizer screenshot](https://i.imgur.com/koyJSLL.png)\n\n## Summary\n\nHaving undergone the effort of building out our collection in Postman first:\n\n- Using Postman Mocks\n- Writing tests\n \nThis has allowed us to then build out our API to match, meaning we could:\n(Update the `url` in the environment to `http://localhost:3000` and run the following Node API: https://github.com/matt-ball/users-api)\n\n- Debug our API as it was being built\n- Ensure parity with our mocks, meeting the designed blueprint\n- Run tests against the API as it was being built so that it's watertight\n\nAs a result:\n\n- We now have a shareable collection for our API\n- We have beautiful, rich documentation showing how it works\n- We can run our collection in a fully automated fashion and attach it to our CI/CD pipeline\n- We can create a Postman Monitor with no added effort to check for responsiveness and correctness",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Create",
+            "item": [
+                {
+                    "name": "New user",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "a0ef6d26-6397-4103-a733-ca100e4f56d8",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "",
+                                    "pm.test(\"Status code is 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('API response is successful', () => {",
+                                    "    pm.expect(res.status).to.eql('success');",
+                                    "});",
+                                    "",
+                                    "pm.test('Created user has correct type of user ID', () => {",
+                                    "    pm.expect(res.id).to.be.a('string');",
+                                    "});",
+                                    "",
+                                    "pm.test('Does not expose user password', () => {",
+                                    "    pm.expect(res).to.not.have.property('password');",
+                                    "});",
+                                    "",
+                                    "pm.test('Created user has all relevant fields', () => {",
+                                    "    pm.expect(res).to.have.all.keys('status', 'id', 'firstName', 'lastName');",
+                                    "});",
+                                    "",
+                                    "// pm.test('Created user matches submitted user', () => {",
+                                    "//     const requestedUser = _.omit(rawToObject(pm.request.body.urlencoded.toString()), 'password');",
+                                    "//     const response = _.omit(res, ['id', 'status']);",
+                                    "//     pm.expect(requestedUser).to.eql(response);",
+                                    "// });",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/delete?id=${res.id}`,",
+                                    "    method: 'delete'",
+                                    "});",
+                                    "",
+                                    "function rawToObject (str) {",
+                                    "    return str.split('&').reduce((prev, curr, i, arr) => {",
+                                    "        var p = curr.split('=');",
+                                    "        prev[decodeURIComponent(p[0])] = decodeURIComponent(p[1]);",
+                                    "        return prev;",
+                                    "    }, {});",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "id": "2b393b80-c095-4992-a65a-d37f2281335b",
+                                "exec": [
+                                    ""
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "id": "a4b3082d-5e9f-4741-8065-7987495019f8",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "name": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "firstName",
+                                    "value": "{{$randomFirstName}}",
+                                    "description": "The user's first name (required)",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "lastName",
+                                    "value": "{{$randomLastName}}",
+                                    "description": "The user's last name (required)",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "{{$randomPassword}}",
+                                    "description": "The user's password (required)",
+                                    "type": "text"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{url}}/create",
+                            "host": [
+                                "{{url}}"
+                            ],
+                            "path": [
+                                "create"
+                            ]
+                        },
+                        "description": "Creates a new user in the system. The user will be assigned an ID automatically. This can be found in the response."
+                    },
+                    "response": [
+                        {
+                            "id": "0e765085-e6b6-4b50-95f3-97c3f55be2cf",
+                            "name": "New user (failure)",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "name": "Content-Type",
+                                        "value": "application/x-www-form-urlencoded",
+                                        "type": "text"
+                                    },
+                                    {
+                                        "key": "fhgu",
+                                        "value": "hff",
+                                        "type": "text"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "file",
+                                    "file": {}
+                                },
+                                "url": {
+                                    "raw": "{{url}}/create",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "create"
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "Access-Control-Allow-Credentials",
+                                    "value": ""
+                                },
+                                {
+                                    "key": "Access-Control-Allow-Headers",
+                                    "value": ""
+                                },
+                                {
+                                    "key": "Access-Control-Allow-Methods",
+                                    "value": ""
+                                },
+                                {
+                                    "key": "Access-Control-Allow-Origin",
+                                    "value": "*"
+                                },
+                                {
+                                    "key": "Access-Control-Expose-Headers",
+                                    "value": ""
+                                },
+                                {
+                                    "key": "Content-Encoding",
+                                    "value": "gzip"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Mon, 10 Jun 2019 17:15:08 GMT"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"65-KsPJ95rCxmmvvRBY2Sqroxk2vmA\""
+                                },
+                                {
+                                    "key": "Server",
+                                    "value": "nginx"
+                                },
+                                {
+                                    "key": "Vary",
+                                    "value": "Accept-Encoding"
+                                },
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "x-srv-span",
+                                    "value": "v=1;s=74ffbaf94164f2e0"
+                                },
+                                {
+                                    "key": "x-srv-trace",
+                                    "value": "v=1;t=7dd8ae46cd0d8f93"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "114"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"fail\"\n}"
+                        },
+                        {
+                            "id": "23a1b2be-0677-4b9d-a981-b24795de3a32",
+                            "name": "New user",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "name": "Content-Type",
+                                        "value": "application/x-www-form-urlencoded",
+                                        "type": "text"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "urlencoded",
+                                    "urlencoded": [
+                                        {
+                                            "key": "firstName",
+                                            "value": "{{firstName}}",
+                                            "description": "The user's first name (required)",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "lastName",
+                                            "value": "{{lastName}}",
+                                            "description": "The user's last name (required)",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "password",
+                                            "value": "{{password}}",
+                                            "description": "The user's password (required)",
+                                            "type": "text"
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{url}}/create",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "create"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "101"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"65-KsPJ95rCxmmvvRBY2Sqroxk2vmA\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Thu, 10 Jan 2019 23:58:59 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"success\",\n    \"firstName\": \"{{$randomFirstName}}\",\n    \"lastName\": \"{{$randomLastName}}\",\n    \"id\": \"{{$randomUUID}}\"\n}"
+                        }
+                    ]
+                }
+            ],
+            "id": "071d332d-02fd-43cf-aa7d-055d45166332",
+            "description": "This folder contains requests relevant to creating users in the system."
+        },
+        {
+            "name": "Read",
+            "item": [
+                {
+                    "name": "Get all users",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "2656d46c-cdd6-4581-a593-c01546437d6c",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "const id = pm.globals.get('id');",
+                                    "",
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('API determines successful request', () => {",
+                                    "    pm.expect(res.status).to.eql('success');",
+                                    "})",
+                                    "",
+                                    "pm.test('At least one user exists', () => {",
+                                    "   pm.expect(res.users.length).to.be.greaterThan(1);",
+                                    "});",
+                                    "",
+                                    "pm.test('User has all relevant fields', () => {",
+                                    "    res.users.forEach((val, i) => {",
+                                    "        if (i > 0) {",
+                                    "            pm.expect(val).to.have.all.keys('id', 'firstName', 'lastName');",
+                                    "            ",
+                                    "        }",
+                                    "    });",
+                                    "});",
+                                    "",
+                                    "pm.test('User passwords are not exposed', () => {",
+                                    "    res.users.forEach((val) => {",
+                                    "       pm.expect(val).to.not.have.property('password');",
+                                    "    });",
+                                    "});",
+                                    "",
+                                    "// cleanup",
+                                    "pm.globals.unset('id');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                    "    method: 'delete'",
+                                    "});",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "",
+                                    "const template = `",
+                                    "    <link rel=\"stylesheet\" href=\"https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css\">",
+                                    "    <script src=\"https://code.jquery.com/jquery-3.5.1.min.js\"></script>",
+                                    "    <script src=\"https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js\"></script>",
+                                    "    <div class=\"table\">",
+                                    "        <table>",
+                                    "            <thead>",
+                                    "                <tr>",
+                                    "                    <th>User ID</th>",
+                                    "                    <th>First Name</th>",
+                                    "                    <th>Last Name</th>",
+                                    "                </tr>",
+                                    "            </thead>",
+                                    "            <tbody>",
+                                    "            {{#each res.users}}",
+                                    "                <tr>",
+                                    "                    <td>{{id}}</td>",
+                                    "                    <td>{{firstName}}</td>",
+                                    "                    <td>{{lastName}}</td>",
+                                    "                </tr>",
+                                    "            {{/each}}",
+                                    "            </tbody>",
+                                    "        </table>",
+                                    "    </div>",
+                                    "",
+                                    "    <script>",
+                                    "        $('table').DataTable()",
+                                    "    </script>",
+                                    "`",
+                                    "",
+                                    "pm.visualizer.set(template, { res });"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const res = pm.response.json();",
+                                "const id = pm.globals.get('id');",
+                                "",
+                                "pm.test('Status code is 200', () => {",
+                                "    pm.response.to.have.status(200);",
+                                "});",
+                                "",
+                                "pm.test('One user exists', () => {",
+                                "   pm.expect(res).to.have.length(2);",
+                                "});",
+                                "",
+                                "pm.test('User has all relevant fields', () => {",
+                                "    res.forEach((val, i) => {",
+                                "        if (i > 0) {",
+                                "            pm.expect(val).to.have.all.keys('id', 'firstName', 'lastName');",
+                                "            ",
+                                "        }",
+                                "    });",
+                                "});",
+                                "",
+                                "pm.test('User passwords are not exposed', () => {",
+                                "    res.forEach((val) => {",
+                                "       pm.expect(val).to.not.have.property('password');",
+                                "    });",
+                                "});",
+                                "",
+                                "// cleanup",
+                                "pm.globals.unset('id');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                "    method: 'delete'",
+                                "});"
+                            ]
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "id": "0b58824a-dc59-46eb-802d-d17952f3604e",
+                                "exec": [
+                                    "// const firstName = pm.variables.get('firstName');",
+                                    "// const lastName = pm.variables.get('lastName');",
+                                    "// const password = pm.variables.get('password');",
+                                    "",
+                                    "// pm.sendRequest({",
+                                    "//     url: `${pm.environment.get('url')}/create`,",
+                                    "//     method: 'POST',",
+                                    "//     header: 'Content-Type:application/x-www-form-urlencoded',",
+                                    "//     body: {",
+                                    "//         mode: 'raw',",
+                                    "//         raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                    "//     }",
+                                    "// }, (err, res) => {",
+                                    "//     res = res.json();",
+                                    "//     pm.globals.set('id', res.id);",
+                                    "// });"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const firstName = pm.variables.get('firstName');",
+                                "const lastName = pm.variables.get('lastName');",
+                                "const password = pm.variables.get('password');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/create`,",
+                                "    method: 'POST',",
+                                "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                "    body: {",
+                                "        mode: 'raw',",
+                                "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                "    }",
+                                "}, (err, res) => {",
+                                "    res = res.json();",
+                                "    pm.globals.set('id', res.id);",
+                                "});"
+                            ]
+                        }
+                    ],
+                    "id": "af454ed3-d5cc-4abc-bf1c-9004097002b7",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "auth": {
+                            "type": "apikey",
+                            "apikey": [
+                                {
+                                    "key": "value",
+                                    "value": "{{apikey}}",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "key",
+                                    "value": "apikey",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "key",
+                                "value": "{{key}}",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{url}}/get?all=true",
+                            "host": [
+                                "{{url}}"
+                            ],
+                            "path": [
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "all",
+                                    "value": "true"
+                                }
+                            ]
+                        },
+                        "description": "Get all users in the system. The response is also visualized in Postman for easier user filtering and searching."
+                    },
+                    "response": [
+                        {
+                            "id": "f9a185ec-2baa-4dcc-ad57-70ecf77f88d5",
+                            "name": "Get all users",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{url}}/get?all=true",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "get"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "all",
+                                            "value": "true"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "105"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"69-ti7ujd/Cyb8EeoWoqRXh482Zy5o\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Fri, 11 Jan 2019 00:00:53 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"success\",\n    \"users\": [{\n        \"firstName\": \"{{$randomFirstName}}\",\n        \"lastName\": \"{{$randomLastName}}\",\n        \"id\": \"{{$randomUUID}}\"\n    }, {\n        \"firstName\": \"{{$randomFirstName}}\",\n        \"lastName\": \"{{$randomLastName}}\",\n        \"id\": \"{{$randomUUID}}\"\n    }, {\n        \"firstName\": \"{{$randomFirstName}}\",\n        \"lastName\": \"{{$randomLastName}}\",\n        \"id\": \"{{$randomUUID}}\"\n    }, {\n        \"firstName\": \"{{$randomFirstName}}\",\n        \"lastName\": \"{{$randomLastName}}\",\n        \"id\": \"{{$randomUUID}}\"\n    }]\n}\n"
+                        },
+                        {
+                            "id": "758916b4-277b-447b-89f7-0fcdca371b2b",
+                            "name": "Partial failure",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "key",
+                                        "value": "{{key}}",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{url}}/get?all=true",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "get"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "all",
+                                            "value": "true"
+                                        }
+                                    ]
+                                }
+                            },
+                            "_postman_previewlanguage": "json",
+                            "header": null,
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"success\",\n    \"users\": [{\n        \"firstName\": \"{{$randomFirstName}}\",\n        \"lastName\": \"{{$randomLastName}}\",\n        \"id\": \"{{$randomUUI"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get user by ID",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "88cfcc63-eebc-47d2-92cc-bd1be3768158",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "const id = pm.globals.get('id');",
+                                    "",
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "// pm.test('User matches requested user', () => {",
+                                    "//     const id = pm.request.url.query.get('id');",
+                                    "//     pm.expect(res[1].id).to.eql(id);",
+                                    "// });",
+                                    "",
+                                    "pm.test('User has correct type of user ID', () => {",
+                                    "    pm.expect(res[1].id).to.be.a('string');",
+                                    "});",
+                                    "",
+                                    "pm.test('Does not expose user password', () => {",
+                                    "    pm.expect(res[1]).to.not.have.property('password');",
+                                    "});",
+                                    "",
+                                    "pm.test('User has all relevant fields', () => {",
+                                    "    pm.expect(res[1]).to.have.all.keys('id', 'firstName', 'lastName');",
+                                    "});",
+                                    "",
+                                    "// cleanup",
+                                    "pm.globals.unset('id');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                    "    method: 'delete'",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const res = pm.response.json();",
+                                "const id = pm.globals.get('id');",
+                                "",
+                                "pm.test('Status code is 200', () => {",
+                                "    pm.response.to.have.status(200);",
+                                "});",
+                                "",
+                                "pm.test('User matches requested user', () => {",
+                                "    const id = pm.request.url.query.get('id');",
+                                "    pm.expect(res[1].id).to.eql(id);",
+                                "});",
+                                "",
+                                "pm.test('User has correct type of user ID', () => {",
+                                "    pm.expect(res[1].id).to.be.a('string');",
+                                "});",
+                                "",
+                                "pm.test('Does not expose user password', () => {",
+                                "    pm.expect(res[1]).to.not.have.property('password');",
+                                "});",
+                                "",
+                                "pm.test('User has all relevant fields', () => {",
+                                "    pm.expect(res[1]).to.have.all.keys('id', 'firstName', 'lastName');",
+                                "});",
+                                "",
+                                "// cleanup",
+                                "pm.globals.unset('id');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                "    method: 'delete'",
+                                "});"
+                            ]
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "id": "e7bd160f-cc08-453c-b4cb-a0ab1e7df06c",
+                                "exec": [
+                                    "const firstName = pm.variables.get('firstName');",
+                                    "const lastName = pm.variables.get('lastName');",
+                                    "const password = pm.variables.get('password');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/create`,",
+                                    "    method: 'POST',",
+                                    "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                    "    body: {",
+                                    "        mode: 'raw',",
+                                    "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                    "    }",
+                                    "}, (err, res) => {",
+                                    "    res = res.json();",
+                                    "    pm.globals.set('id', res.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const firstName = pm.variables.get('firstName');",
+                                "const lastName = pm.variables.get('lastName');",
+                                "const password = pm.variables.get('password');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/create`,",
+                                "    method: 'POST',",
+                                "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                "    body: {",
+                                "        mode: 'raw',",
+                                "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                "    }",
+                                "}, (err, res) => {",
+                                "    res = res.json();",
+                                "    pm.globals.set('id', res.id);",
+                                "});"
+                            ]
+                        }
+                    ],
+                    "id": "0e18ad3d-d933-4eee-9f9f-e2c5ad62aa3c",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "x-mock-response-name",
+                                "value": "Get user by ID",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{url}}/get/?id={{id}}",
+                            "host": [
+                                "{{url}}"
+                            ],
+                            "path": [
+                                "get",
+                                ""
+                            ],
+                            "query": [
+                                {
+                                    "key": "id",
+                                    "value": "{{id}}",
+                                    "description": "The user's ID (required)"
+                                }
+                            ]
+                        },
+                        "description": "Retrieves a user by `id`."
+                    },
+                    "response": [
+                        {
+                            "id": "54418e43-d356-42e4-b34e-cc2a19958729",
+                            "name": "Get user by ID",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{url}}/get/?id={{id}}",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "get",
+                                        ""
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "id",
+                                            "value": "{{id}}",
+                                            "description": "The user's ID (required)"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "105"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"69-PWyeF3E5khoqlHSeQl62TwtxWks\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Fri, 11 Jan 2019 00:03:13 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "[\n    {\n        \"status\": \"success\"\n    },\n    {\n        \"firstName\": \"Andrew\",\n        \"lastName\": \"Smith\",\n        \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n    }\n]"
+                        },
+                        {
+                            "id": "c2ded624-5447-4f88-8fa6-c43881072611",
+                            "name": "Get user by ID (no user found)",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{url}}/get/?id={{id}}",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "get",
+                                        ""
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "id",
+                                            "value": "{{id}}",
+                                            "description": "The user's ID (required)"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "36"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"24-+nHORFhZtwqol4/kZqGURIjn3RE\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Fri, 11 Jan 2019 00:39:07 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"no user found\",\n    \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b\"\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Get users by first name",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "43ac1744-e6bd-45f3-bfb1-b109fd6355e9",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "const id = pm.globals.get('id');",
+                                    "const firstName = pm.variables.get('firstName');",
+                                    "",
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('List of users is returned', () => {",
+                                    "    pm.expect(res).to.be.an('array');",
+                                    "});",
+                                    "",
+                                    "pm.test('All users have firstname: ' + firstName, () => {",
+                                    "    res.forEach((val, i) => {",
+                                    "        if (i > 0) {",
+                                    "            pm.expect(val.firstName).to.eql(firstName);   ",
+                                    "        }",
+                                    "    });",
+                                    "});",
+                                    "",
+                                    "pm.test('User passwords are not exposed', () => {",
+                                    "    res.forEach((val, i) => {",
+                                    "        if (i > 0) {",
+                                    "            pm.expect(val).to.not.have.all.keys('password');   ",
+                                    "        }",
+                                    "    });",
+                                    "});",
+                                    "",
+                                    "pm.test('User has all relevant fields and correct types', () => {",
+                                    "    res.forEach((val, i) => {",
+                                    "        if (i > 0) {",
+                                    "            pm.expect(val.id).to.be.a('string');",
+                                    "            pm.expect(val.firstName).to.be.a('string');",
+                                    "            pm.expect(val.lastName).to.be.a('string');",
+                                    "        }",
+                                    "    });",
+                                    "});",
+                                    "",
+                                    "// cleanup",
+                                    "pm.globals.unset('id');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                    "    method: 'delete'",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const res = pm.response.json();",
+                                "const id = pm.globals.get('id');",
+                                "const firstName = pm.variables.get('firstName');",
+                                "",
+                                "pm.test('Status code is 200', () => {",
+                                "    pm.response.to.have.status(200);",
+                                "});",
+                                "",
+                                "pm.test('List of users is returned', () => {",
+                                "    pm.expect(res).to.be.an('array');",
+                                "});",
+                                "",
+                                "pm.test('All users have firstname: ' + firstName, () => {",
+                                "    res.forEach((val, i) => {",
+                                "        if (i > 0) {",
+                                "            pm.expect(val.firstName).to.eql(firstName);   ",
+                                "        }",
+                                "    });",
+                                "});",
+                                "",
+                                "pm.test('User passwords are not exposed', () => {",
+                                "    res.forEach((val, i) => {",
+                                "        if (i > 0) {",
+                                "            pm.expect(val).to.not.have.all.keys('password');   ",
+                                "        }",
+                                "    });",
+                                "});",
+                                "",
+                                "pm.test('User has all relevant fields and correct types', () => {",
+                                "    res.forEach((val, i) => {",
+                                "        if (i > 0) {",
+                                "            pm.expect(val.id).to.be.a('string');",
+                                "            pm.expect(val.firstName).to.be.a('string');",
+                                "            pm.expect(val.lastName).to.be.a('string');",
+                                "        }",
+                                "    });",
+                                "});",
+                                "",
+                                "// cleanup",
+                                "pm.globals.unset('id');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                "    method: 'delete'",
+                                "});"
+                            ]
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "id": "aa6b4c53-12b0-4ba9-b91f-6d3eaeb7703c",
+                                "exec": [
+                                    "const firstName = pm.variables.get('firstName');",
+                                    "const lastName = pm.variables.get('lastName');",
+                                    "const password = pm.variables.get('password');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/create`,",
+                                    "    method: 'POST',",
+                                    "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                    "    body: {",
+                                    "        mode: 'raw',",
+                                    "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                    "    }",
+                                    "}, (err, res) => {",
+                                    "    res = res.json();",
+                                    "    pm.globals.set('id', res.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const firstName = pm.variables.get('firstName');",
+                                "const lastName = pm.variables.get('lastName');",
+                                "const password = pm.variables.get('password');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/create`,",
+                                "    method: 'POST',",
+                                "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                "    body: {",
+                                "        mode: 'raw',",
+                                "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                "    }",
+                                "}, (err, res) => {",
+                                "    res = res.json();",
+                                "    pm.globals.set('id', res.id);",
+                                "});"
+                            ]
+                        }
+                    ],
+                    "id": "a03e54bd-388d-4bd2-937d-d9226479f9a2",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{url}}/get/?firstName={{firstName}}",
+                            "host": [
+                                "{{url}}"
+                            ],
+                            "path": [
+                                "get",
+                                ""
+                            ],
+                            "query": [
+                                {
+                                    "key": "firstName",
+                                    "value": "{{firstName}}",
+                                    "description": "The user's first name (required)"
+                                }
+                            ]
+                        },
+                        "description": "Retrieves all users with the given `firstName`."
+                    },
+                    "response": [
+                        {
+                            "id": "835f63d2-95f8-46ad-8402-a61ca23caf96",
+                            "name": "Get users by first name",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{url}}/get/?firstName={{firstName}}",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "get",
+                                        ""
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "firstName",
+                                            "value": "{{firstName}}",
+                                            "description": "The user's first name (required)"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "105"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"69-F/ktIhtM5We/sndYYNUK1vmdEnQ\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Fri, 11 Jan 2019 00:05:34 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "[\n    {\n        \"status\": \"success\"\n    },\n    {\n        \"firstName\": \"Ben\",\n        \"lastName\": \"Smith\",\n        \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n    }\n]"
+                        }
+                    ]
+                }
+            ],
+            "id": "8cade41f-6a13-46cf-a60f-a1f9d260e012",
+            "description": "This folder contains requests relevant to retrieve single or multiple users from the system.",
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "id": "00e0ea5d-9281-4d13-9879-f7260eaef05c",
+                        "type": "text/javascript",
+                        "exec": [
+                            ""
+                        ]
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "id": "49cbfc0b-8990-49fe-acda-134dd5cf4000",
+                        "type": "text/javascript",
+                        "exec": [
+                            "console.log('hi from folder')"
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Update",
+            "item": [
+                {
+                    "name": "Update user",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "5e1d3bf5-14d9-4781-a464-06c9930dfcea",
+                                "exec": [
+                                    "const res = pm.response.json();",
+                                    "const id = pm.request.url.query.get('id');",
+                                    "const firstName = pm.request.body.urlencoded.get('firstName');",
+                                    "",
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "if (res.status === 'success') {",
+                                    "    // pm.test('User matches requested user', () => {",
+                                    "    //     pm.expect(res.id).to.eql(id);",
+                                    "    // });",
+                                    "    ",
+                                    "    pm.test('User has correct type of user ID', () => {",
+                                    "        pm.expect(res.id).to.be.a('string');",
+                                    "    });",
+                                    "    ",
+                                    "    pm.test('User has all relevant fields', () => {",
+                                    "        pm.expect(res).to.have.all.keys('status', 'id', 'firstName', 'lastName');",
+                                    "    });",
+                                    "    ",
+                                    "    pm.test('Does not expose user password', () => {",
+                                    "        pm.expect(res).to.not.have.property('password');",
+                                    "    });",
+                                    "    ",
+                                    "    pm.test('First name is updated to: ' + firstName, () => {",
+                                    "        pm.expect(res.firstName).to.eql(firstName);",
+                                    "    });",
+                                    "}",
+                                    "",
+                                    "else if (res.status === 'no user found') {",
+                                    "    pm.test('Lookup was against correct user', () => {",
+                                    "        pm.expect(res.id).to.eql(id);",
+                                    "    });",
+                                    "}",
+                                    "",
+                                    "else {",
+                                    "    pm.test(res.status).to.eql('invalid request');",
+                                    "}",
+                                    "",
+                                    "// cleanup",
+                                    "pm.globals.unset('id');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                    "    method: 'delete'",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const res = pm.response.json();",
+                                "const id = pm.request.url.query.get('id');",
+                                "const firstName = pm.request.body.urlencoded.get('firstName');",
+                                "",
+                                "pm.test('Status code is 200', () => {",
+                                "    pm.response.to.have.status(200);",
+                                "});",
+                                "",
+                                "if (res.status === 'success') {",
+                                "    pm.test('User matches requested user', () => {",
+                                "        pm.expect(res.id).to.eql(id);",
+                                "    });",
+                                "    ",
+                                "    pm.test('User has correct type of user ID', () => {",
+                                "        pm.expect(res.id).to.be.a('string');",
+                                "    });",
+                                "    ",
+                                "    pm.test('User has all relevant fields', () => {",
+                                "        pm.expect(res).to.have.all.keys('status', 'id', 'firstName', 'lastName');",
+                                "    });",
+                                "    ",
+                                "    pm.test('Does not expose user password', () => {",
+                                "        pm.expect(res).to.not.have.property('password');",
+                                "    });",
+                                "    ",
+                                "    pm.test('First name is updated to: ' + firstName, () => {",
+                                "        pm.expect(res.firstName).to.eql(firstName);",
+                                "    });",
+                                "}",
+                                "",
+                                "else if (res.status === 'no user found') {",
+                                "    pm.test('Lookup was against correct user', () => {",
+                                "        pm.expect(res.id).to.eql(id);",
+                                "    });",
+                                "}",
+                                "",
+                                "else {",
+                                "    pm.test(res.status).to.eql('invalid request');",
+                                "}",
+                                "",
+                                "// cleanup",
+                                "pm.globals.unset('id');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/delete?id=${id}`,",
+                                "    method: 'delete'",
+                                "});"
+                            ]
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "id": "2f49535d-7e42-4259-9841-221c3bc3be65",
+                                "exec": [
+                                    "const firstName = pm.variables.get('firstName');",
+                                    "const lastName = pm.variables.get('lastName');",
+                                    "const password = pm.variables.get('password');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/create`,",
+                                    "    method: 'POST',",
+                                    "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                    "    body: {",
+                                    "        mode: 'raw',",
+                                    "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                    "    }",
+                                    "}, (err, res) => {",
+                                    "    res = res.json();",
+                                    "    pm.globals.set('id', res.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const firstName = pm.variables.get('firstName');",
+                                "const lastName = pm.variables.get('lastName');",
+                                "const password = pm.variables.get('password');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/create`,",
+                                "    method: 'POST',",
+                                "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                "    body: {",
+                                "        mode: 'raw',",
+                                "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                "    }",
+                                "}, (err, res) => {",
+                                "    res = res.json();",
+                                "    pm.globals.set('id', res.id);",
+                                "});"
+                            ]
+                        }
+                    ],
+                    "id": "d494beef-299a-4e27-81e0-bf8780b7dbc1",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "name": "Content-Type",
+                                "value": "application/x-www-form-urlencoded",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "firstName",
+                                    "value": "Benjamin",
+                                    "description": "The user's new first name",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "foobar",
+                                    "description": "The user's new password",
+                                    "type": "text",
+                                    "disabled": true
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{url}}/update?id={{id}}",
+                            "host": [
+                                "{{url}}"
+                            ],
+                            "path": [
+                                "update"
+                            ],
+                            "query": [
+                                {
+                                    "key": "id",
+                                    "value": "{{id}}",
+                                    "description": "The user's ID (required)"
+                                }
+                            ]
+                        },
+                        "description": "Send the keys that you'd like to update, this can be one or more of `firstName`, `lastName` and `password`."
+                    },
+                    "response": [
+                        {
+                            "id": "8cb92924-8378-48a9-bb9e-180624e373ee",
+                            "name": "Update user",
+                            "originalRequest": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "name": "Content-Type",
+                                        "value": "application/x-www-form-urlencoded",
+                                        "type": "text"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "urlencoded",
+                                    "urlencoded": [
+                                        {
+                                            "key": "firstName",
+                                            "value": "Benjamin",
+                                            "description": "The user's new first name",
+                                            "type": "text"
+                                        },
+                                        {
+                                            "key": "password",
+                                            "value": "foobar",
+                                            "description": "The user's new password",
+                                            "type": "text",
+                                            "disabled": true
+                                        }
+                                    ]
+                                },
+                                "url": {
+                                    "raw": "{{url}}/update?id={{id}}",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "update"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "id",
+                                            "value": "{{id}}",
+                                            "description": "The user's ID (required)"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "106"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"6a-SA9mzR+M2pmN7WPGgLm1ZqtRYis\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Fri, 11 Jan 2019 00:18:07 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"success\",\n    \"firstName\": \"Benjamin\",\n    \"lastName\": \"Smith\",\n    \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
+                        }
+                    ]
+                }
+            ],
+            "id": "80e2b5ed-1898-4e1f-9e57-bfeae81af921",
+            "description": "Contains request relevant to updating and making changes to existing users in the system."
+        },
+        {
+            "name": "Delete",
+            "item": [
+                {
+                    "name": "Delete user",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "id": "512ca1d3-37a1-4fc8-9521-bd65f8ff83aa",
+                                "exec": [
+                                    "const response = pm.response;",
+                                    "const id = pm.globals.get('id');",
+                                    "",
+                                    "pm.test('Status code is 200', () => {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test('Operation is successful', () => {",
+                                    "    const res = response.json();",
+                                    "    pm.expect(res.status).to.eql('success');",
+                                    "});",
+                                    "",
+                                    "// pm.test('User matches requested user', () => {",
+                                    "//     const res = response.json();",
+                                    "//     pm.globals.set(\"apiKey\", res.id);",
+                                    "//     pm.expect(res.id).to.eql(id);",
+                                    "// });",
+                                    "",
+                                    "pm.test('User can no longer be found', () => {",
+                                    "    pm.sendRequest({",
+                                    "        url: `${pm.environment.get('url')}/get?id=${id}`,",
+                                    "        header: 'x-mock-response-name:Get user by ID (no user found)',",
+                                    "        method: 'get'",
+                                    "    }, (err, res) => {",
+                                    "        res = res.json();",
+                                    "        pm.expect(res.status).to.eql('no user found');",
+                                    "    });",
+                                    "});",
+                                    "",
+                                    "// cleanup",
+                                    "pm.globals.unset('id');"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const response = pm.response;",
+                                "const id = pm.globals.get('id');",
+                                "",
+                                "pm.test('Status code is 200', () => {",
+                                "    pm.response.to.have.status(200);",
+                                "});",
+                                "",
+                                "pm.test('Operation is successful', () => {",
+                                "    const res = response.json();",
+                                "    pm.expect(res.status).to.eql('success');",
+                                "});",
+                                "",
+                                "pm.test('User matches requested user', () => {",
+                                "    const res = response.json();",
+                                "    pm.globals.set(\"apiKey\", res.id);",
+                                "    pm.expect(res.id).to.eql(id);",
+                                "});",
+                                "",
+                                "pm.test('User can no longer be found', () => {",
+                                "    pm.sendRequest({",
+                                "        url: `${pm.environment.get('url')}/get?id=${id}`,",
+                                "        header: 'x-mock-response-name:Get user by ID (no user found)',",
+                                "        method: 'get'",
+                                "    }, (err, res) => {",
+                                "        res = res.json();",
+                                "        pm.expect(res.status).to.eql('no user found');",
+                                "    });",
+                                "});",
+                                "",
+                                "// cleanup",
+                                "pm.globals.unset('id');"
+                            ]
+                        },
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "id": "34d08709-0498-4ce3-a09d-174267f5195f",
+                                "exec": [
+                                    "const firstName = pm.variables.get('firstName');",
+                                    "const lastName = pm.variables.get('lastName');",
+                                    "const password = pm.variables.get('password');",
+                                    "",
+                                    "pm.sendRequest({",
+                                    "    url: `${pm.environment.get('url')}/create`,",
+                                    "    method: 'POST',",
+                                    "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                    "    body: {",
+                                    "        mode: 'raw',",
+                                    "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                    "    }",
+                                    "}, (err, res) => {",
+                                    "    res = res.json();",
+                                    "    pm.globals.set('id', res.id);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            },
+                            "exec": [
+                                "const firstName = pm.variables.get('firstName');",
+                                "const lastName = pm.variables.get('lastName');",
+                                "const password = pm.variables.get('password');",
+                                "",
+                                "pm.sendRequest({",
+                                "    url: `${pm.environment.get('url')}/create`,",
+                                "    method: 'POST',",
+                                "    header: 'Content-Type:application/x-www-form-urlencoded',",
+                                "    body: {",
+                                "        mode: 'raw',",
+                                "        raw: `firstName=${firstName}&lastName=${lastName}&password=${password}`",
+                                "    }",
+                                "}, (err, res) => {",
+                                "    res = res.json();",
+                                "    pm.globals.set('id', res.id);",
+                                "});"
+                            ]
+                        }
+                    ],
+                    "id": "fa3df676-c29d-4667-8097-335ca104aee8",
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    },
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "name": "Content-Type",
+                                "value": "text/plain",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": ""
+                        },
+                        "url": {
+                            "raw": "{{url}}/delete?id={{id}}",
+                            "host": [
+                                "{{url}}"
+                            ],
+                            "path": [
+                                "delete"
+                            ],
+                            "query": [
+                                {
+                                    "key": "id",
+                                    "value": "{{id}}",
+                                    "description": "The user's ID"
+                                }
+                            ]
+                        },
+                        "description": "Deletes a user from the system by `id`."
+                    },
+                    "response": [
+                        {
+                            "id": "935b3b92-c843-428e-856b-31e001495293",
+                            "name": "Delete user",
+                            "originalRequest": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "name": "Content-Type",
+                                        "value": "application/x-www-form-urlencoded",
+                                        "type": "text"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": ""
+                                },
+                                "url": {
+                                    "raw": "{{url}}/delete?id={{id}}",
+                                    "host": [
+                                        "{{url}}"
+                                    ],
+                                    "path": [
+                                        "delete"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "id",
+                                            "value": "{{id}}",
+                                            "description": "The user's ID"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [
+                                {
+                                    "key": "X-Powered-By",
+                                    "value": "Express"
+                                },
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                },
+                                {
+                                    "key": "Content-Length",
+                                    "value": "64"
+                                },
+                                {
+                                    "key": "ETag",
+                                    "value": "W/\"40-bT/ASzl0KO3wj/eo2xEBaHPLnvk\""
+                                },
+                                {
+                                    "key": "Date",
+                                    "value": "Fri, 11 Jan 2019 00:20:55 GMT"
+                                },
+                                {
+                                    "key": "Connection",
+                                    "value": "keep-alive"
+                                }
+                            ],
+                            "cookie": [],
+                            "responseTime": null,
+                            "body": "{\n    \"status\": \"success\",\n    \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
+                        }
+                    ]
+                }
+            ],
+            "id": "130edddf-00ba-4a7d-9e71-07a55dd80029",
+            "description": "Requests related to deleting users from the system."
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "id": "ba912c55-0f08-460f-a3c1-9029ddd93cc0",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "id": "84eb03fb-5f95-4319-a7b1-e47a846936a7",
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "id": "5192236a-c4f0-48ef-bb76-31c567aa1113",
+            "key": "firstName",
+            "value": "Ben"
+        },
+        {
+            "id": "2fe5ad72-2be0-4aa1-9ab2-9bb090f0e006",
+            "key": "lastName",
+            "value": "Smith"
+        },
+        {
+            "id": "6d55a8f9-dbdc-41fd-b4bd-7be548f3464d",
+            "key": "password",
+            "value": "pw"
+        }
+    ]
+}

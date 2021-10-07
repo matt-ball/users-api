@@ -1,0 +1,418 @@
+{
+    "info": {
+        "_postman_id": "4bc60c2a-b34b-479c-ac2f-9c48a0562f9e",
+        "name": "Users Docs",
+        "description": "This API is designed to show how you might mock, test document a new API. In this case, we're assuming that we're going to create a basic user management API.\n\nIt has basic CRUD operations listed below.\n\nHit the \"Run in Postman\" button to see the pre-request and test scripts powering this collection.\n\nTry running the collection through the Collection Runner to see how the mock allows us to scope out all our responses and write our tests in advance.\n\n## Summary\n\nHaving undergone the effort of building out our collection in Postman first:\n\n- Using Postman Mocks\n- Writing tests\n \nThis has allowed us to then build out our API to match, meaning we could:\n(Update the `url` in the environment to `http://localhost:3000` and run the following Node API: https://github.com/matt-ball/users-api)\n\n- Debug our API as it was being built\n- Ensure parity with our mocks, meeting the designed blueprint\n- Run tests against the API as it was being built so that it's watertight\n\nAs a result:\n\n- We now have a shareable collection for our API\n- We have beautiful, rich documentation showing how it works\n- We can run our collection in a fully automated fashion and attach it to our CI/CD pipeline\n- We can create a Postman Monitor with no added effort to check for responsiveness and correctness",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "New",
+            "id": "10632199-9345-4590-9d78-3cbefd382154",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "firstName",
+                            "value": "Ben",
+                            "description": "(Required) The user's first name (required)"
+                        },
+                        {
+                            "key": "lastName",
+                            "value": "Smith",
+                            "description": "(Required) The user's last name (required)"
+                        },
+                        {
+                            "key": "password",
+                            "value": "pw",
+                            "description": "(Required) The user's password (required)"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/create",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "create"
+                    ]
+                },
+                "description": "Creates a new user in the system. The user will be assigned an ID automatically. This can be found in the response."
+            },
+            "response": [
+                {
+                    "id": "4b539324-d1b8-4b8c-a351-2d0230043462",
+                    "name": "response",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "description": "(Required) ",
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "description": "(Required) The user's first name (required)",
+                                    "key": "firstName",
+                                    "value": "Ben"
+                                },
+                                {
+                                    "description": "(Required) The user's last name (required)",
+                                    "key": "lastName",
+                                    "value": "Smith"
+                                },
+                                {
+                                    "description": "(Required) The user's password (required)",
+                                    "key": "password",
+                                    "value": "pw"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/create",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "create"
+                            ]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "disabled": false,
+                            "key": "X-Powered-By",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Content-Length",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "ETag",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Date",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Connection",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json; charset=utf-8"
+                        }
+                    ],
+                    "cookie": [],
+                    "responseTime": null,
+                    "body": "{\n \"status\": \"success\",\n \"firstName\": \"Ben\",\n \"lastName\": \"Smith\",\n \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
+                },
+                {
+                    "id": "128b4012-796d-43fc-9d95-f7c7970b69a6",
+                    "name": "Bad Request",
+                    "originalRequest": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "description": "(Required) ",
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "description": "(Required) The user's first name (required)",
+                                    "key": "firstName",
+                                    "value": "Ben"
+                                },
+                                {
+                                    "description": "(Required) The user's last name (required)",
+                                    "key": "lastName",
+                                    "value": "Smith"
+                                },
+                                {
+                                    "description": "(Required) The user's password (required)",
+                                    "key": "password",
+                                    "value": "pw"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/create",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "create"
+                            ]
+                        }
+                    },
+                    "status": "Bad Request",
+                    "code": 400,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ],
+                    "cookie": [],
+                    "responseTime": null,
+                    "body": "{\n \"status\": \"fail\"\n}"
+                }
+            ]
+        },
+        {
+            "name": "Get all users",
+            "id": "39324025-99cd-4c60-bdfd-176942c923fd",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/get?all=true",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "get"
+                    ],
+                    "query": [
+                        {
+                            "key": "all",
+                            "value": "true",
+                            "description": "(Required) "
+                        }
+                    ]
+                },
+                "description": "Get all users in the system."
+            },
+            "response": [
+                {
+                    "id": "77a3bfeb-5379-42d8-9e7e-1ac54735082d",
+                    "name": "response",
+                    "originalRequest": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{baseUrl}}/get?all=true",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "get"
+                            ],
+                            "query": [
+                                {
+                                    "key": "all",
+                                    "value": "true"
+                                }
+                            ]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "disabled": false,
+                            "key": "X-Powered-By",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Content-Length",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "ETag",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Date",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Connection",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json; charset=utf-8"
+                        }
+                    ],
+                    "cookie": [],
+                    "responseTime": null,
+                    "body": "[\n {\n  \"status\": \"success\"\n },\n {\n  \"firstName\": \"Benjamin\",\n  \"lastName\": \"Smith\",\n  \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n }\n]"
+                }
+            ]
+        },
+        {
+            "name": "Update user",
+            "id": "bb1f62dd-50f8-429d-910b-f3d13f08e387",
+            "request": {
+                "method": "PUT",
+                "header": [
+                    {
+                        "key": "Content-Type",
+                        "value": "application/x-www-form-urlencoded"
+                    }
+                ],
+                "body": {
+                    "mode": "urlencoded",
+                    "urlencoded": [
+                        {
+                            "key": "firstName",
+                            "value": "Benjamin",
+                            "description": "(Required) The user's new first name"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{baseUrl}}/update?id={{id}}",
+                    "host": [
+                        "{{baseUrl}}"
+                    ],
+                    "path": [
+                        "update"
+                    ],
+                    "query": [
+                        {
+                            "key": "id",
+                            "value": "{{id}}",
+                            "description": "(Required) The user's ID (required)"
+                        }
+                    ]
+                },
+                "description": "Send the keys that you'd like to update, this can be one or more of `firstName`, `lastName` and `password`."
+            },
+            "response": [
+                {
+                    "id": "4c7e13d4-de21-460b-8834-235c4ff62c4f",
+                    "name": "response",
+                    "originalRequest": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "description": "(Required) ",
+                                "key": "Content-Type",
+                                "value": "application/x-www-form-urlencoded"
+                            }
+                        ],
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "description": "(Required) The user's new first name",
+                                    "key": "firstName",
+                                    "value": "Benjamin"
+                                }
+                            ]
+                        },
+                        "url": {
+                            "raw": "{{baseUrl}}/update?id={{id}}",
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "update"
+                            ],
+                            "query": [
+                                {
+                                    "key": "id",
+                                    "value": "{{id}}"
+                                }
+                            ]
+                        }
+                    },
+                    "status": "OK",
+                    "code": 200,
+                    "_postman_previewlanguage": "json",
+                    "header": [
+                        {
+                            "disabled": false,
+                            "key": "X-Powered-By",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Content-Length",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "ETag",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Date",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "disabled": false,
+                            "key": "Connection",
+                            "value": "",
+                            "description": ""
+                        },
+                        {
+                            "key": "Content-Type",
+                            "value": "application/json; charset=utf-8"
+                        }
+                    ],
+                    "cookie": [],
+                    "responseTime": null,
+                    "body": "{\n \"status\": \"success\",\n \"firstName\": \"Benjamin\",\n \"lastName\": \"Smith\",\n \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "id": "2f8fc9dc-1680-4efe-93c2-99962105c28c",
+            "key": "baseUrl",
+            "value": "https://81cfad21-ff8a-41a7-976c-3b9eb0d6ad6c.mock.pstmn.io",
+            "type": "string"
+        }
+    ]
+}
