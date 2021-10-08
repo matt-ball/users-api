@@ -19,7 +19,7 @@ jobs:
           make background
       - name: Lint code
         run: make lint
-      - uses: matt-ball/newman-action@v0.3.5
+      - uses: matt-ball/newman-action@v0.3.6
         with:
           collection: postman_collection.json
           environment: postman_environment.json
