@@ -1,3 +1,5 @@
+
+   
 name: Tests
 
 on:
@@ -17,7 +19,7 @@ jobs:
           make background
       - name: Lint code
         run: make lint
-      - name: Newman
-        run: |
-          npm i newman
-          node_modules/.bin/newman run postman_collection.json -e postman_environment.json
+      - uses: matt-ball/newman-action@master
+        with:
+          collection: postman_collection.json
+          environment: postman_environment.json
