@@ -8,6 +8,8 @@ const badRequest = { status: 'invalid request' }
 const requiredUserKeys = ['firstName', 'lastName', 'password']
 let users = []
 
+console.log('here')
+
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
