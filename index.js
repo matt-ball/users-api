@@ -98,4 +98,6 @@ function filterUsers (query, key) {
   }
 }
 
+console.log('test')
+
 app.listen(3000, () => console.log(`Running!`))
