@@ -98,6 +98,4 @@ function filterUsers (query, key) {
   }
 }
 
-console.log('hello world')
-
 app.listen(3000, () => console.log(`Running!`))
