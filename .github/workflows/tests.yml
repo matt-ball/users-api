@@ -19,7 +19,8 @@ jobs:
           make background
       - name: Lint code
         run: make lint
-      - uses: matt-ball/newman-action@v1.0.2
+      - uses: matt-ball/newman-action@v1.0.4
         with:
+          apiKey: ${{ secrets.postmanApiKey }}
           collection: postman_collection.json
-          environment: postman_environment.json
+          environment: 10016724-9f2cb19b-05e2-4515-96fa-2eb56a5d1e43
