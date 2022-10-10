@@ -1,0 +1,435 @@
+openapi: 3.0.0
+info:
+  title: Users API
+  description: "This API is designed to show how you might mock, test document a new API. In this case, we're assuming that we're going to create a basic user management API.\n\nIt has basic CRUD operations listed below.\n\nHit the \"Run in Postman\" button to see the pre-request and test scripts powering this collection.\n\nTry running the collection through the Collection Runner to see how the mock allows us to scope out all our responses and write our tests in advance.\n\n## Summary\n\nHaving undergone the effort of building out our collection in Postman first:\n\n- Using Postman Mocks\n- Writing tests\n \nThis has allowed us to then build out our API to match, meaning we could:\n(Update the `url` in the environment to `http://localhost:3000` and run the following Node API: https://github.com/matt-ball/users-api)\n\n- Debug our API as it was being built\n- Ensure parity with our mocks, meeting the designed blueprint\n- Run tests against the API as it was being built so that it's watertight\n\nAs a result:\n\n- We now have a shareable collection for our API\n- We have beautiful, rich documentation showing how it works\n- We can run our collection in a fully automated fashion and attach it to our CI/CD pipeline\n- We can create a Postman Monitor with no added effort to check for responsiveness and correctness"
+  contact: {}
+  version: '3.0.0'
+servers:
+- url: https://81cfad21-ff8a-41a7-976c-3b9eb0d6ad6c.mock.pstmn.io
+  variables: {}
+paths:
+  /create:
+    post:
+      tags:
+      - Create
+      summary: New
+      description: Creates a new user in the system. The user will be assigned an ID automatically. This can be found in the response.
+      operationId: NewUser
+      parameters:
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/x-www-form-urlencoded
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - firstName
+              - lastName
+              - password
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: The user's first name (required)
+                  example: Ben
+                lastName:
+                  type: string
+                  description: The user's last name (required)
+                  example: Smith
+                password:
+                  type: string
+                  description: The user's password (required)
+                  example: pw
+        required: false
+      responses:
+        200:
+          description: ''
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: 101
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"65-KsPJ95rCxmmvvRBY2Sqroxk2vmA"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Thu, 10 Jan 2019 23:58:59 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Newuser'
+              example:
+                status: success
+                firstName: Ben
+                lastName: Smith
+                id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Newuser%28failure%29'
+              example:
+                status: fail
+      deprecated: false
+      security: []
+  /get:
+    get:
+      tags:
+      - Read
+      summary: Get all users
+      description: Get all users in the system.
+      operationId: GetAllUsers
+      parameters:
+      - name: all
+        in: query
+        description: ''
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          example: true
+      responses:
+        200:
+          description: ''
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: 105
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"69-ti7ujd/Cyb8EeoWoqRXh482Zy5o"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Fri, 11 Jan 2019 00:00:53 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+          content:
+            application/json; charset=utf-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Getalluser'
+              example:
+              - status: success
+              - firstName: Benjamin
+                lastName: Smith
+                id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+      deprecated: false
+      security: []
+  /update:
+    put:
+      tags:
+      - Update
+      summary: Update user
+      description: Send the keys that you'd like to update, this can be one or more of `firstName`, `lastName` and `password`.
+      operationId: UpdateUser
+      parameters:
+      - name: id
+        in: query
+        description: The user's ID (required)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: '{{id}}'
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/x-www-form-urlencoded
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              required:
+              - firstName
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  description: The user's new first name
+                  example: Benjamin
+        required: false
+      responses:
+        200:
+          description: ''
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: 106
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"6a-SA9mzR+M2pmN7WPGgLm1ZqtRYis"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Fri, 11 Jan 2019 00:18:07 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Updateuser'
+              example:
+                status: success
+                firstName: Benjamin
+                lastName: Smith
+                id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+      deprecated: false
+  /delete:
+    delete:
+      tags:
+      - Delete
+      summary: Delete user
+      description: Deletes a user from the system by `id`.
+      operationId: DeleteUser
+      parameters:
+      - name: id
+        in: query
+        description: The user's ID
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: '{{id}}'
+      - name: Content-Type
+        in: header
+        description: ''
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          example: application/x-www-form-urlencoded
+      responses:
+        200:
+          description: ''
+          headers:
+            X-Powered-By:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Express
+            Content-Length:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: 64
+            ETag:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: W/"40-bT/ASzl0KO3wj/eo2xEBaHPLnvk"
+            Date:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: Fri, 11 Jan 2019 00:20:55 GMT
+            Connection:
+              content:
+                text/plain:
+                  schema:
+                    type: string
+                  example: keep-alive
+          content:
+            application/json; charset=utf-8:
+              schema:
+                $ref: '#/components/schemas/Deleteuser'
+              example:
+                status: success
+                id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+      deprecated: false
+components:
+  schemas:
+    Newuser:
+      title: Newuser
+      required:
+      - status
+      - firstName
+      - lastName
+      - id
+      type: object
+      properties:
+        status:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        id:
+          type: string
+      example:
+        status: success
+        firstName: Ben
+        lastName: Smith
+        id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+    Newuser(failure):
+      title: Newuser(failure)
+      required:
+      - status
+      type: object
+      properties:
+        status:
+          type: string
+      example:
+        status: fail
+    Getalluser:
+      title: Getalluser
+      type: object
+      properties:
+        status:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        id:
+          type: string
+      example:
+        status: success
+    GetuserbyID(nouserfound):
+      title: GetuserbyID(nouserfound)
+      required:
+      - status
+      - id
+      type: object
+      properties:
+        status:
+          type: string
+        id:
+          type: string
+      example:
+        status: no user found
+        id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b
+    Getusersbyfirstname:
+      title: Getusersbyfirstname
+      type: object
+      properties:
+        status:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        id:
+          type: string
+      example:
+        status: success
+    Updateuser:
+      title: Updateuser
+      required:
+      - status
+      - firstName
+      - lastName
+      - id
+      type: object
+      properties:
+        status:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        id:
+          type: string
+      example:
+        status: success
+        firstName: Benjamin
+        lastName: Smith
+        id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+    Deleteuser:
+      title: Deleteuser
+      required:
+      - status
+      - id
+      type: object
+      properties:
+        status:
+          type: string
+        id:
+          type: string
+      example:
+        status: success
+        id: 0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7
+tags:
+- name: Create
+- name: Read
+- name: Update
+- name: Delete
