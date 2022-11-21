@@ -529,13 +529,77 @@
 					"body": "{\n  \"status\": \"success\",\n  \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
 				}
 			]
+		},
+		{
+			"name": "Echo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9a612daf-6696-442c-a0c5-340d9bd255c7",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "3a791fcb-c0df-48d6-ab97-dac280dc865e",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "postman-echo.com/get",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"get"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d0906e2c-fb23-41d3-9817-62ec44da968d",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "6fff6f6a-320a-4ed4-86d5-1f2d8355e82a",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	],
 	"variable": [
 		{
-			"id": "a79702dc-6816-40eb-81f4-570a819481f7",
+			"id": "cd8588c2-ee96-4d94-aceb-acf5a2ac30ac",
 			"key": "baseUrl",
 			"value": "https://81cfad21-ff8a-41a7-976c-3b9eb0d6ad6c.mock.pstmn.io",
+			"type": "string"
+		},
+		{
+			"id": "7026be00-9ad7-451f-af4d-1955e3ab34fa",
+			"key": "foo",
+			"value": "bar",
 			"type": "string"
 		}
 	]
