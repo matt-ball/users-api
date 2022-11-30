@@ -529,6 +529,33 @@
 					"body": "{\n  \"status\": \"success\",\n  \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
 				}
 			]
+		},
+		{
+			"name": "Get one user",
+			"id": "ccd054e2-4605-4085-895e-1e47f897e28c",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/get?id=1",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"get"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"variable": [
