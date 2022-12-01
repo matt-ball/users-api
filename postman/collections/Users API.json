@@ -199,6 +199,20 @@
 		},
 		{
 			"name": "Get all users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2c32ce06-5f82-41e0-adb9-78a9cc3d3ed4",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"id": "8330a462-e83d-468c-ab73-eb32e180ebbb",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -293,135 +307,6 @@
 					],
 					"cookie": [],
 					"body": "[\n  {\n    \"status\": \"success\"\n  },\n  {\n    \"firstName\": \"Benjamin\",\n    \"lastName\": \"Smith\",\n    \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n  }\n]"
-				}
-			]
-		},
-		{
-			"name": "Update user",
-			"id": "c7912798-eda5-4bb7-9a4c-3b823af783e1",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "PUT",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/x-www-form-urlencoded"
-					},
-					{
-						"key": "Accept",
-						"value": "application/json; charset=utf-8"
-					}
-				],
-				"body": {
-					"mode": "urlencoded",
-					"urlencoded": [
-						{
-							"key": "firstName",
-							"value": "Benjamin",
-							"description": "(Required) The user's new first name"
-						}
-					]
-				},
-				"url": {
-					"raw": "{{baseUrl}}/update?id={{id}}",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"update"
-					],
-					"query": [
-						{
-							"key": "id",
-							"value": "{{id}}",
-							"description": "(Required) The user's ID (required)"
-						}
-					]
-				},
-				"description": "Send the keys that you'd like to update, this can be one or more of `firstName`, `lastName` and `password`."
-			},
-			"response": [
-				{
-					"id": "4dd7662e-a37f-426b-bbd0-25a56624fcca",
-					"name": "Untitled Example",
-					"originalRequest": {
-						"method": "PUT",
-						"header": [
-							{
-								"description": "(Required) ",
-								"key": "Content-Type",
-								"value": "application/x-www-form-urlencoded"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"description": "(Required) The user's new first name",
-									"key": "firstName",
-									"value": "Benjamin"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{baseUrl}}/update?id={{id}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"update"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "{{id}}"
-								}
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"disabled": false,
-							"key": "X-Powered-By",
-							"value": "",
-							"description": ""
-						},
-						{
-							"disabled": false,
-							"key": "Content-Length",
-							"value": "",
-							"description": ""
-						},
-						{
-							"disabled": false,
-							"key": "ETag",
-							"value": "",
-							"description": ""
-						},
-						{
-							"disabled": false,
-							"key": "Date",
-							"value": "",
-							"description": ""
-						},
-						{
-							"disabled": false,
-							"key": "Connection",
-							"value": "",
-							"description": ""
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						}
-					],
-					"cookie": [],
-					"body": "{\n  \"status\": \"success\",\n  \"firstName\": \"Benjamin\",\n  \"lastName\": \"Smith\",\n  \"id\": \"0729d37c-ef9f-4ffa-8f71-a6eedf1f95b7\"\n}"
 				}
 			]
 		},
@@ -552,6 +437,29 @@
 							"key": "id",
 							"value": "1"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Echo",
+			"id": "50dabca7-86e5-40db-b14f-e10b4c052beb",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postman-echo.com/get",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"get"
 					]
 				}
 			},
