@@ -14,7 +14,7 @@
   },
   "homepage": "https://github.com/matt-ball/users-api#readme",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.18.2",
     "lodash": "^4.17.15",
     "uniq": "^1.0.1",
     "uuid": "^3.3.2"
