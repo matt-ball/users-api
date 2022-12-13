@@ -556,6 +556,43 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Filter users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f93309f3-ebb3-4ac9-b0e2-3d0a84859384",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"id": "56e185ee-00e9-4834-9a8a-d8741daee755",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://postman-echo.com/get",
+					"protocol": "https",
+					"host": [
+						"postman-echo",
+						"com"
+					],
+					"path": [
+						"get"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"variable": [
