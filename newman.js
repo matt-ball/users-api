@@ -2,9 +2,11 @@ const newman = require('newman')
 
 const config = [{
   collection: 'postman_collection.json',
-  environment: 'postman_environment.json'
+  environment: 'postman_environment.json',
+  reporters: 'htmlextra'
 }, {
-  collection: 'postman_echo.json'
+  collection: 'postman_echo.json',
+  reporters: 'htmlextra'
 }]
 
 const runs = config.map((cfg, i) => {
@@ -16,6 +18,6 @@ const runs = config.map((cfg, i) => {
   })
 })
 
-Promise.all(runs).then((results) => {
-  console.log(results)
+Promise.all(runs).then(() => {
+  console.log('Done')
 })
