@@ -1,11 +1,10 @@
 const newman = require('newman')
 
 const config = [{
-  collection: 'collection_one.json',
-  environment: 'env_one.json'
+  collection: 'postman_collection.json',
+  environment: 'postman_environment.json'
 }, {
-  collection: 'collection_two.json',
-  environment: 'env_two.json'
+  collection: 'postman_echo.json'
 }]
 
 const runs = config.map((cfg, i) => {
