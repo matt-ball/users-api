@@ -21,3 +21,8 @@ jobs:
         run: make lint
       - name: Run Newman
         run: node newman.js
+      - name: Output the run details
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-run-reports
+          path: newman
