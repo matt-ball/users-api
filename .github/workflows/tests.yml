@@ -1,5 +1,3 @@
-
-   
 name: Tests
 
 on:
@@ -19,10 +17,8 @@ jobs:
           make background
       - name: Lint code
         run: make lint
-      - name: Run Newman
-        run: node newman.js
-      - name: Output the run details
-        uses: actions/upload-artifact@v3
+      - uses: matt-ball/newman-action@master
         with:
-          name: test-run-reports
-          path: newman
+          collection: postman_collection.json
+          environment: postman_environment.json
+      
